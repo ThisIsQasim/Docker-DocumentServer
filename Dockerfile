@@ -1,15 +1,16 @@
-FROM ubuntu:16.04
-LABEL maintainer Ascensio System SIA <support@onlyoffice.com>
+FROM debian:stretch-slim
+
 
 ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8 DEBIAN_FRONTEND=noninteractive
 
 RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d && \
     apt-get -y update && \
-    apt-get -yq install wget apt-transport-https curl locales && \
+    apt-get -yq install wget gnupg apt-transport-https curl locales && \
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0x8320ca65cb2de8e5 && \
     locale-gen en_US.UTF-8 && \
     curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
     apt-get -y update && \
+    mkdir /usr/share/man/man1 /usr/share/man/man7 && \
     apt-get -yq install \
         adduser \
         bomstrip \
@@ -22,7 +23,7 @@ RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d && \
         libgtkglext1 \
         libnspr4 \
         libnss3 \
-        libnss3-nssdb \
+#        libnss3-nssdb \
         libstdc++6 \
         libxml2 \
         libxss1 \
