@@ -13,6 +13,7 @@
 * [Installing ONLYOFFICE Document Server integrated with Community and Mail Servers](#installing-onlyoffice-document-server-integrated-with-community-and-mail-servers)
 * [Issues](#issues)
     - [Docker Issues](#docker-issues)
+    - [Document Server usage Issues](#document-server-usage-issues)
 * [Project Information](#project-information)
 * [User Feedback and Support](#user-feedback-and-support)
 
@@ -166,7 +167,8 @@ Below is the complete list of parameters that can be set using environment varia
 - **POSTGRESQL_SERVER_DB_NAME**: The name of a PostgreSQL database to be created on the image startup.
 - **POSTGRESQL_SERVER_USER**: The new user name with superuser permissions for the PostgreSQL account.
 - **POSTGRESQL_SERVER_PASS**: The password set for the PostgreSQL account.
-- **RABBITMQ_SERVER_URL**: The [AMQP URL](http://www.rabbitmq.com/uri-spec.html "RabbitMQ URI Specification") to connect to RabbitMQ server.
+- **AMQP_SERVER_URL**: The [AMQP URL](http://www.rabbitmq.com/uri-spec.html "RabbitMQ URI Specification") to connect to message broker server.
+- **AMQP_SERVER_TYPE**: The message broker type. Supported values are `rabbitmq` or `activemq`. Defaults to `rabbitmq`.
 - **REDIS_SERVER_HOST**: The IP address or the name of the host where the Redis server is running.
 - **REDIS_SERVER_PORT**:  The Redis server port number.
 - **NGINX_WORKER_PROCESSES**: Defines the number of nginx worker processes.
@@ -281,9 +283,19 @@ As a relatively new project Docker is being worked on and actively developed by 
 
 The known Docker issue with ONLYOFFICE Document Server with rpm-based distributives is that sometimes the processes fail to start inside Docker container. Fedora and RHEL/CentOS users should try disabling selinux with setenforce 0. If it fixes the issue then you can either stick with SELinux disabled which is not recommended by RedHat, or switch to using Ubuntu.
 
+### Document Server usage issues
+
+Due to the operational characteristic, **Document Server** saves a document only after the document has been closed by all the users who edited it. To avoid data loss, you must forcefully disconnect the **Document Server** users when you need to stop **Document Server** in cases of the application update, server reboot etc. To do that, execute the following script on the server where **Document Server** is installed:
+
+```
+sudo docker exec <CONTAINER> documentserver-prepare4shutdown.sh
+```
+
+Please note, that both executing the script and disconnecting users may take a long time (up to 5 minutes).
+
 ## Project Information
 
-Official website: [http://www.onlyoffice.org](http://onlyoffice.org "http://www.onlyoffice.org")
+Official website: [https://www.onlyoffice.com](https://www.onlyoffice.com/?utm_source=github&utm_medium=cpc&utm_campaign=GitHubDockerDS)
 
 Code repository: [https://github.com/ONLYOFFICE/DocumentServer](https://github.com/ONLYOFFICE/DocumentServer "https://github.com/ONLYOFFICE/DocumentServer")
 
@@ -291,7 +303,9 @@ Docker Image: [https://github.com/ONLYOFFICE/Docker-DocumentServer](https://gith
 
 License: [GNU AGPL v3.0](https://help.onlyoffice.com/products/files/doceditor.aspx?fileid=4358397&doc=K0ZUdlVuQzQ0RFhhMzhZRVN4ZFIvaHlhUjN2eS9XMXpKR1M5WEppUk1Gcz0_IjQzNTgzOTci0 "GNU AGPL v3.0")
 
-SaaS version: [http://www.onlyoffice.com](http://www.onlyoffice.com "http://www.onlyoffice.com")
+Free version vs commercial builds comparison: https://github.com/ONLYOFFICE/DocumentServer#onlyoffice-document-server-editions
+
+SaaS version: [https://www.onlyoffice.com/cloud-office.aspx](https://www.onlyoffice.com/cloud-office.aspx?utm_source=github&utm_medium=cpc&utm_campaign=GitHubDockerDS)
 
 ## User Feedback and Support
 
